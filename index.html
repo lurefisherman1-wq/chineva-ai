@@ -1,0 +1,1112 @@
+
+<!DOCTYPE html>
+<html lang="en" class="h-full dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cineva AI - Intelligent Assistant</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        gemini: {
+                            bg: "#131314",
+                            sidebar: "#1e1f20",
+                            card: "#1e1f20",
+                            hover: "#2e2f31",
+                            input: "#1e1f20",
+                            sparkle: "#4285f4"
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: Inter, sans-serif;
+            background: #131314;
+            color: #e3e3e3;
+        }
+
+        .gemini-gradient-text {
+            background: linear-gradient(74deg, #4285f4, #9b51e0, #e91e63);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gemini-border-glow:focus-within {
+            box-shadow: 0 0 15px rgba(66, 133, 244, .2);
+            border-color: rgba(66, 133, 244, .5);
+        }
+
+        .typing-cursor::after {
+            content: "▋";
+            color: #4285f4;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        #user-input {
+            max-height: 192px;
+            overflow-y: auto;
+        }
+
+        .response-content {
+            overflow-wrap: anywhere;
+            user-select: text;
+        }
+
+        .response-content pre {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        button { cursor: pointer; }
+
+.cineva-loader {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 58px;
+    width: 100px;
+    padding-left: 8px;
+}
+
+.cineva-orb {
+    position: relative;
+    z-index: 2;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 0deg,
+        #4285f4,
+        #a142f4,
+        #ec4899,
+        #38bdf8,
+        #4285f4
+    );
+    box-shadow:
+        0 0 12px rgba(66, 133, 244, 0.65),
+        0 0 28px rgba(161, 66, 244, 0.3);
+    animation: cinevaOrb 2s ease-in-out infinite,
+               cinevaRotate 3s linear infinite;
+}
+
+.cineva-orb::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: #131314;
+    opacity: 0.25;
+}
+
+.cineva-orb-glow {
+    position: absolute;
+    left: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(66, 133, 244, 0.32),
+        rgba(161, 66, 244, 0.12),
+        transparent 70%
+    );
+    animation: cinevaGlow 2s ease-in-out infinite;
+}
+
+@keyframes cinevaOrb {
+    0%, 100% {
+        transform: scale(0.85);
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        transform: scale(1.15);
+        filter: hue-rotate(35deg);
+    }
+}
+
+@keyframes cinevaRotate {
+    to {
+        rotate: 360deg;
+    }
+}
+
+@keyframes cinevaGlow {
+    0%, 100% {
+        opacity: 0.4;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.25);
+    }
+}
+
+    </style>
+</head>
+
+<body class="h-screen flex flex-col overflow-hidden antialiased">
+
+<div class="flex h-full w-full relative">
+
+    <!-- Mobile overlay -->
+    <div id="sidebar-overlay"
+         onclick="toggleSidebar()"
+         class="fixed inset-0 bg-black/60 z-20 hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar"
+           class="fixed md:static inset-y-0 left-0 z-30 w-72 shrink-0
+                  bg-gemini-sidebar flex flex-col border-r border-gray-800/50
+                  transition-transform duration-300 -translate-x-full md:translate-x-0">
+
+        <div class="p-3 flex flex-col h-full">
+
+            <div class="flex items-center justify-between px-2 py-2 mb-4">
+                <button onclick="toggleSidebar()"
+                        class="p-2 rounded-full hover:bg-gemini-hover text-gray-400">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <button onclick="createNewChat()"
+                        class="flex items-center gap-2 px-4 py-2 text-sm
+                               bg-gemini-hover hover:bg-gray-700 rounded-full">
+                    <i class="fa-solid fa-plus"></i>
+                    New Chat
+                </button>
+            </div>
+
+            <div class="px-4 py-2 text-xs font-semibold text-gray-400 uppercase">
+                Recent
+            </div>
+
+            <div id="chat-history-list"
+                 class="flex-1 overflow-y-auto space-y-1"></div>
+
+            <div class="pt-3 border-t border-gray-800 space-y-1 text-sm">
+
+                <button onclick="testWorker()"
+                        class="w-full flex items-center gap-3 px-4 py-3
+                               rounded-full hover:bg-gemini-hover text-gray-300">
+                    <i class="fa-solid fa-server w-5"></i>
+                    Test AI Connection
+                </button>
+
+                <button onclick="clearHistory()"
+                        class="w-full flex items-center gap-3 px-4 py-3
+                               rounded-full hover:bg-gemini-hover text-gray-300">
+                    <i class="fa-solid fa-trash-can w-5"></i>
+                    Clear History
+                </button>
+
+                <div class="px-4 py-2 text-xs text-gray-500 flex justify-between">
+                    <span>Cineva AI v1.0</span>
+                    <span id="status-dot"
+                          class="w-2 h-2 rounded-full bg-gray-500"></span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 flex flex-col h-full bg-gemini-bg min-w-0">
+
+        <!-- Header -->
+        <header class="h-16 shrink-0 flex items-center justify-between
+                       px-4 md:px-6 border-b border-gray-800/40">
+
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()"
+                        class="md:hidden p-2 rounded-full hover:bg-gemini-hover">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <button onclick="createNewChat()"
+                        class="text-xl font-semibold gemini-gradient-text">
+                    Cineva AI
+                </button>
+            </div>
+
+            <button onclick="testWorker()"
+                    id="api-status-badge"
+                    class="flex items-center gap-2 text-xs px-3 py-2
+                           rounded-full bg-gray-500/10 text-gray-400
+                           border border-gray-500/20">
+                <i class="fa-solid fa-circle-notch"></i>
+                <span>Checking...</span>
+            </button>
+        </header>
+
+        <!-- Chat area -->
+        <div id="chat-container"
+             class="flex-1 overflow-y-auto p-4 md:p-6">
+
+            <!-- Welcome screen -->
+            <div id="welcome-screen"
+                 class="min-h-full max-w-4xl mx-auto flex flex-col
+                        justify-center items-start gap-8 py-10">
+
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-medium mb-3">
+                        <span class="gemini-gradient-text">Hello, Friend</span>
+                    </h1>
+
+                    <h2 class="text-2xl md:text-4xl text-gray-500">
+                        How can Cineva AI assist you today?
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4
+                            gap-3 w-full">
+
+                    <button onclick="sendQuickPrompt('Help me brainstorm ideas for a new web application')"
+                            class="bg-gemini-card hover:bg-gemini-hover p-4 rounded-2xl
+                                   border border-gray-800 text-left h-36
+                                   flex flex-col justify-between">
+                        <span class="text-sm">Brainstorm ideas for a new web application</span>
+                        <i class="fa-regular fa-lightbulb self-end text-amber-400"></i>
+                    </button>
+
+                    <button onclick="sendQuickPrompt('Write a Java program to calculate the factorial of a number')"
+                            class="bg-gemini-card hover:bg-gemini-hover p-4 rounded-2xl
+                                   border border-gray-800 text-left h-36
+                                   flex flex-col justify-between">
+                        <span class="text-sm">Write a Java program</span>
+                        <i class="fa-solid fa-code self-end text-blue-400"></i>
+                    </button>
+
+                    <button onclick="sendQuickPrompt('Explain artificial intelligence in simple terms')"
+                            class="bg-gemini-card hover:bg-gemini-hover p-4 rounded-2xl
+                                   border border-gray-800 text-left h-36
+                                   flex flex-col justify-between">
+                        <span class="text-sm">Explain AI in simple terms</span>
+                        <i class="fa-solid fa-compass self-end text-purple-400"></i>
+                    </button>
+
+                    <button onclick="sendQuickPrompt('Write a professional email asking for project updates')"
+                            class="bg-gemini-card hover:bg-gemini-hover p-4 rounded-2xl
+                                   border border-gray-800 text-left h-36
+                                   flex flex-col justify-between">
+                        <span class="text-sm">Draft a professional email</span>
+                        <i class="fa-regular fa-pen-to-square self-end text-emerald-400"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div id="messages-list"
+                 class="hidden max-w-4xl mx-auto space-y-6 pb-6"></div>
+        </div>
+
+        <!-- Input -->
+        <div class="shrink-0 p-3 md:p-4">
+            <div class="max-w-4xl mx-auto w-full">
+
+                <div class="relative bg-gemini-input rounded-3xl
+                            border border-gray-700/60 gemini-border-glow">
+
+                    <textarea
+                        id="user-input"
+                        rows="1"
+                        placeholder="Ask Cineva AI..."
+                        onkeydown="handleKeyDown(event)"
+                        oninput="autoResize(this)"
+                        class="w-full bg-transparent text-gray-100
+                               placeholder-gray-500 px-5 pt-4 pb-14
+                               rounded-3xl focus:outline-none resize-none
+                               text-base"
+                    ></textarea>
+
+                    <div class="absolute bottom-2.5 left-3 right-3
+                                flex items-center justify-between">
+
+                        <div class="flex items-center gap-1">
+
+                            <button type="button"
+                                    onclick="document.getElementById('file-input').click()"
+                                    class="p-2 rounded-full text-gray-400
+                                           hover:text-white hover:bg-gemini-hover"
+                                    title="Attach file">
+                                <i class="fa-solid fa-paperclip"></i>
+                            </button>
+
+                            <input type="file"
+                                   id="file-input"
+                                   accept="image/*,.pdf,.txt,.doc,.docx"
+                                   hidden
+                                   onchange="handleFileSelect(this)">
+
+                            <button type="button"
+                                    onclick="startVoiceInput()"
+                                    class="p-2 rounded-full text-gray-400
+                                           hover:text-white hover:bg-gemini-hover"
+                                    title="Voice input">
+                                <i class="fa-solid fa-microphone"></i>
+                            </button>
+                        </div>
+
+                        <button type="button"
+                                id="send-btn"
+                                onclick="sendMessage()"
+                                class="p-2.5 rounded-full bg-white text-black
+                                       hover:bg-gray-200 transition
+                                       disabled:opacity-40 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-arrow-up text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <p class="text-center text-xs text-gray-500 mt-2">
+                    Cineva AI may display inaccurate information. Please double-check important answers.
+                </p>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Notification -->
+<div id="toast"
+     role="status"
+     class="fixed bottom-20 right-4 z-50 bg-gemini-hover
+            text-gray-200 border border-gray-700 px-4 py-3
+            rounded-xl shadow-lg text-sm hidden">
+</div>
+
+<script>
+"use strict";
+
+/* =====================================================
+   WORKER URL
+   Keep this URL matching your deployed Cloudflare Worker.
+===================================================== */
+
+const WORKER_URL = "https://chineva-ai.lurefisherman1.workers.dev";
+const CHAT_URL = WORKER_URL + "/chat";
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let chats = [];
+
+try {
+    const savedChats = JSON.parse(
+        localStorage.getItem("cineva_chats") || "[]"
+    );
+
+    chats = Array.isArray(savedChats) ? savedChats : [];
+} catch (error) {
+    chats = [];
+}
+
+let activeChatId = null;
+let isGenerating = false;
+
+/* =====================================================
+   START
+===================================================== */
+
+window.addEventListener("DOMContentLoaded", function () {
+    renderChatHistory();
+    testWorker();
+});
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("sidebar-overlay");
+
+    if (window.innerWidth >= 768) {
+        sidebar.classList.toggle("md:hidden");
+        return;
+    }
+
+    sidebar.classList.toggle("-translate-x-full");
+    overlay.classList.toggle("hidden");
+}
+
+function closeMobileSidebar() {
+    if (window.innerWidth < 768) {
+        document.getElementById("sidebar")
+            .classList.add("-translate-x-full");
+
+        document.getElementById("sidebar-overlay")
+            .classList.add("hidden");
+    }
+}
+
+/* =====================================================
+   INPUT
+===================================================== */
+
+function autoResize(textarea) {
+    textarea.style.height = "auto";
+
+    textarea.style.height =
+        Math.min(textarea.scrollHeight, 192) + "px";
+}
+
+function handleKeyDown(event) {
+    if (
+        event.key === "Enter" &&
+        !event.shiftKey &&
+        !event.isComposing
+    ) {
+        event.preventDefault();
+        sendMessage();
+    }
+}
+
+function handleFileSelect(input) {
+    const file = input.files && input.files[0];
+
+    if (!file) return;
+
+    const textarea = document.getElementById("user-input");
+
+    textarea.value +=
+        (textarea.value ? "\n" : "") +
+        "[Attached file: " + file.name + "]";
+
+    autoResize(textarea);
+    textarea.focus();
+
+    triggerNotification(
+        "Selected: " + file.name +
+        ". Note: this version sends the filename, not the file contents."
+    );
+
+    input.value = "";
+}
+
+function startVoiceInput() {
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        triggerNotification(
+            "Voice input is not supported here. Try Chrome."
+        );
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "en-IN";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onresult = function (event) {
+        const transcript = event.results[0][0].transcript;
+        const textarea = document.getElementById("user-input");
+
+        textarea.value +=
+            (textarea.value ? " " : "") + transcript;
+
+        autoResize(textarea);
+        textarea.focus();
+    };
+
+    recognition.onerror = function (event) {
+        triggerNotification(
+            event.error === "not-allowed"
+                ? "Allow microphone permission in your browser."
+                : "Voice input failed. Please try again."
+        );
+    };
+
+    try {
+        recognition.start();
+    } catch (error) {
+        triggerNotification("Voice input is already starting.");
+    }
+}
+
+/* =====================================================
+   WORKER CONNECTION TEST
+===================================================== */
+
+async function testWorker() {
+    const badge = document.getElementById("api-status-badge");
+    const statusDot = document.getElementById("status-dot");
+
+    badge.innerHTML =
+        '<i class="fa-solid fa-circle-notch fa-spin"></i>' +
+        '<span>Checking...</span>';
+
+    try {
+        const response = await fetch(WORKER_URL, {
+            method: "GET"
+        });
+
+        const bodyText = await response.text();
+
+        let data = {};
+
+        try {
+            data = JSON.parse(bodyText);
+        } catch (error) {
+            data = {};
+        }
+
+        if (!response.ok) {
+            throw new Error(
+                data.error || "HTTP " + response.status
+            );
+        }
+
+        badge.className =
+            "flex items-center gap-2 text-xs px-3 py-2 rounded-full " +
+            "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+
+        badge.innerHTML =
+            '<i class="fa-solid fa-circle-check"></i>' +
+            '<span>Worker Online</span>';
+
+        statusDot.className =
+            "w-2 h-2 rounded-full bg-emerald-500";
+
+    } catch (error) {
+        badge.className =
+            "flex items-center gap-2 text-xs px-3 py-2 rounded-full " +
+            "bg-red-500/10 text-red-400 border border-red-500/20";
+
+        badge.innerHTML =
+            '<i class="fa-solid fa-circle-xmark"></i>' +
+            '<span>Connection Error</span>';
+
+        statusDot.className =
+            "w-2 h-2 rounded-full bg-red-500";
+
+        console.error("Worker test failed:", error);
+    }
+}
+
+/* =====================================================
+   NEW CHAT
+===================================================== */
+
+function createNewChat() {
+    activeChatId = null;
+
+    document.getElementById("welcome-screen")
+        .classList.remove("hidden");
+
+    const messagesList =
+        document.getElementById("messages-list");
+
+    messagesList.classList.add("hidden");
+    messagesList.innerHTML = "";
+
+    const input = document.getElementById("user-input");
+    input.value = "";
+    input.style.height = "auto";
+
+    closeMobileSidebar();
+    renderChatHistory();
+    input.focus();
+}
+
+/* =====================================================
+   CHAT HISTORY
+===================================================== */
+
+function renderChatHistory() {
+    const historyList =
+        document.getElementById("chat-history-list");
+
+    historyList.innerHTML = "";
+
+    chats.forEach(function (chat) {
+        const row = document.createElement("div");
+
+        row.className =
+            "group flex items-center gap-1 px-3 py-2 rounded-full " +
+            "text-sm cursor-pointer transition " +
+            (chat.id === activeChatId
+                ? "bg-gemini-hover text-white"
+                : "text-gray-400 hover:bg-gemini-hover/50");
+
+        const openButton = document.createElement("button");
+
+        openButton.type = "button";
+        openButton.className =
+            "flex-1 min-w-0 flex items-center gap-3 text-left";
+
+        const icon = document.createElement("i");
+        icon.className = "fa-regular fa-message text-xs";
+
+        const title = document.createElement("span");
+        title.className = "truncate";
+        title.textContent = chat.title || "New Chat";
+
+        openButton.appendChild(icon);
+        openButton.appendChild(title);
+
+        openButton.addEventListener("click", function () {
+            loadChat(chat.id);
+        });
+
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className =
+            "px-2 py-1 opacity-70 hover:opacity-100 hover:text-red-400";
+
+        deleteButton.innerHTML =
+            '<i class="fa-solid fa-trash text-xs"></i>';
+
+        deleteButton.title = "Delete chat";
+
+        deleteButton.addEventListener("click", function (event) {
+            event.stopPropagation();
+            deleteChat(chat.id);
+        });
+
+        row.appendChild(openButton);
+        row.appendChild(deleteButton);
+        historyList.appendChild(row);
+    });
+}
+
+function loadChat(chatId) {
+    const chat = chats.find(function (item) {
+        return item.id === chatId;
+    });
+
+    if (!chat) return;
+
+    activeChatId = chatId;
+
+    document.getElementById("welcome-screen")
+        .classList.add("hidden");
+
+    const messagesList =
+        document.getElementById("messages-list");
+
+    messagesList.classList.remove("hidden");
+    messagesList.innerHTML = "";
+
+    chat.messages.forEach(function (message) {
+        appendMessageToUI(message.role, message.content);
+    });
+
+    renderChatHistory();
+    scrollToBottom();
+    closeMobileSidebar();
+}
+
+function deleteChat(chatId) {
+    chats = chats.filter(function (chat) {
+        return chat.id !== chatId;
+    });
+
+    persistChats();
+
+    if (activeChatId === chatId) {
+        activeChatId = null;
+
+        document.getElementById("welcome-screen")
+            .classList.remove("hidden");
+
+        document.getElementById("messages-list").innerHTML = "";
+        document.getElementById("messages-list")
+            .classList.add("hidden");
+    }
+
+    renderChatHistory();
+}
+
+function clearHistory() {
+    if (!confirm("Are you sure you want to clear all chat history?")) {
+        return;
+    }
+
+    chats = [];
+    activeChatId = null;
+    persistChats();
+
+    document.getElementById("messages-list").innerHTML = "";
+    document.getElementById("messages-list").classList.add("hidden");
+    document.getElementById("welcome-screen").classList.remove("hidden");
+
+    renderChatHistory();
+}
+
+function persistChats() {
+    try {
+        localStorage.setItem("cineva_chats", JSON.stringify(chats));
+    } catch (error) {
+        triggerNotification("Unable to save chat history in this browser.");
+        console.error("History save error:", error);
+    }
+}
+
+/* =====================================================
+   QUICK PROMPTS
+===================================================== */
+
+function sendQuickPrompt(prompt) {
+    document.getElementById("user-input").value = prompt;
+    autoResize(document.getElementById("user-input"));
+    sendMessage();
+}
+
+/* =====================================================
+   SEND MESSAGE
+===================================================== */
+
+async function sendMessage() {
+    const input = document.getElementById("user-input");
+    const sendButton = document.getElementById("send-btn");
+
+    const prompt = input.value.trim();
+
+    if (!prompt || isGenerating) return;
+
+    isGenerating = true;
+    sendButton.disabled = true;
+
+    input.value = "";
+    input.style.height = "auto";
+
+    document.getElementById("welcome-screen")
+        .classList.add("hidden");
+
+    const messagesList =
+        document.getElementById("messages-list");
+
+    messagesList.classList.remove("hidden");
+
+    if (!activeChatId) {
+        activeChatId = Date.now().toString();
+
+        chats.unshift({
+            id: activeChatId,
+            title: prompt.length > 35
+                ? prompt.substring(0, 35) + "..."
+                : prompt,
+            messages: []
+        });
+    }
+
+    appendMessageToUI("user", prompt);
+    saveMessageToState("user", prompt);
+
+    const aiElement = createAiMessageElement();
+    messagesList.appendChild(aiElement);
+
+    scrollToBottom();
+
+    try {
+        await fetchWorkerChat(prompt, aiElement);
+    } finally {
+        isGenerating = false;
+        sendButton.disabled = false;
+        input.focus();
+    }
+}
+
+/* =====================================================
+   WORKER CHAT REQUEST
+===================================================== */
+
+
+async function fetchWorkerChat(prompt, aiElement) {
+    const contentBox =
+        aiElement.querySelector(".response-content");
+
+    try {
+        // Detect image-generation requests
+        const imageRequest = /^(generate|create|make|draw|design|imagine|generate an image|create an image|make an image|draw an image|photo of|image of|picture of|ek image|image banao|photo banao|tasveer banao|चित्र बनाओ|फोटो बनाओ)\b/i.test(prompt.trim())
+            || /\b(generate|create|make|draw)\b.{0,30}\b(image|picture|photo|artwork|wallpaper|illustration)\b/i.test(prompt)
+            || /\b(image|picture|photo|wallpaper)\b.{0,20}\b(banao|generate|create|draw)\b/i.test(prompt);
+
+        if (imageRequest) {
+            contentBox.textContent = "Generating your image...";
+
+            const response = await fetch(WORKER_URL.replace(/\/$/, "") + "/image", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    prompt: prompt
+                })
+            });
+
+            const rawResponse = await response.text();
+            let data;
+
+            try {
+                data = JSON.parse(rawResponse);
+            } catch (error) {
+                throw new Error("Invalid image response. HTTP " + response.status);
+            }
+
+            if (!response.ok || data.success === false) {
+                throw new Error(data.error || "Image generation failed.");
+            }
+
+            if (!data.image) {
+                throw new Error("Worker did not return an image.");
+            }
+
+            contentBox.classList.remove("typing-cursor");
+            contentBox.textContent = "";
+
+            const image = document.createElement("img");
+            image.src = "data:" + (data.mimeType || "image/png") +
+                ";base64," + data.image;
+            image.alt = prompt;
+            image.style.display = "block";
+            image.style.maxWidth = "100%";
+            image.style.height = "auto";
+            image.style.borderRadius = "12px";
+            image.style.marginTop = "10px";
+
+            contentBox.appendChild(image);
+
+            saveMessageToState("model", "[Generated image] " + prompt);
+            scrollToBottom();
+            return;
+        }
+
+        // Normal chat request
+        const chat = chats.find(function (item) {
+            return item.id === activeChatId;
+        });
+
+        const previousMessages = chat && Array.isArray(chat.messages)
+            ? chat.messages.slice(0, -1).slice(-20)
+            : [];
+
+        const history = previousMessages.map(function (message) {
+            return {
+                role: message.role === "model"
+                    ? "assistant"
+                    : message.role,
+                content: String(message.content || "")
+            };
+        });
+
+        const response = await fetch(CHAT_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: prompt,
+                history: history
+            })
+        });
+
+        const rawResponse = await response.text();
+        let data;
+
+        try {
+            data = JSON.parse(rawResponse);
+        } catch (error) {
+            throw new Error("Worker did not return JSON. HTTP " + response.status);
+        }
+
+        if (!response.ok || data.success === false) {
+            throw new Error(data.error || "HTTP " + response.status);
+        }
+
+        const aiText = data.reply || data.response || data.text || "";
+
+        if (typeof aiText !== "string" || !aiText.trim()) {
+            throw new Error("No AI reply received.");
+        }
+
+        contentBox.classList.remove("typing-cursor");
+        contentBox.innerHTML = formatMarkdown(aiText);
+
+        saveMessageToState("model", aiText);
+        scrollToBottom();
+
+    } catch (error) {
+        console.error("Cineva AI error:", error);
+
+        contentBox.classList.remove("typing-cursor");
+        contentBox.textContent = "Cineva AI error: " + error.message;
+        contentBox.classList.add("text-red-400");
+
+        triggerNotification("Request failed: " + error.message);
+
+        saveMessageToState(
+            "model",
+            "Cineva AI error: " + error.message
+        );
+    }
+}
+
+
+/* =====================================================
+   MESSAGE DISPLAY
+===================================================== */
+
+function appendMessageToUI(role, content) {
+    const messagesList =
+        document.getElementById("messages-list");
+
+    if (role === "user") {
+        const row = document.createElement("div");
+        row.className = "flex justify-end";
+
+        const bubble = document.createElement("div");
+        bubble.className =
+            "bg-gemini-card border border-gray-700/50 text-gray-100 " +
+            "max-w-2xl px-5 py-3 rounded-2xl text-base shadow-sm";
+        bubble.style.whiteSpace = "pre-wrap";
+        bubble.textContent = content;
+
+        row.appendChild(bubble);
+        messagesList.appendChild(row);
+        return;
+    }
+
+    const aiElement = createAiMessageElement();
+    const box = aiElement.querySelector(".response-content");
+
+    box.classList.remove("typing-cursor");
+    box.innerHTML = formatMarkdown(content);
+
+    messagesList.appendChild(aiElement);
+}
+
+
+
+function createAiMessageElement() {
+    const element = document.createElement("div");
+
+    element.className = "flex max-w-3xl items-start";
+
+    element.innerHTML = `
+        <div class="flex-1 min-w-0">
+            <div class="response-content text-gray-200 leading-relaxed text-base">
+                <div class="cineva-loader">
+                    <div class="cineva-orb"></div>
+                    <div class="cineva-orb-glow"></div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    return element;
+}
+
+
+
+function saveMessageToState(role, content) {
+    const chat = chats.find(function (item) {
+        return item.id === activeChatId;
+    });
+
+    if (!chat) return;
+
+    chat.messages.push({
+        role: role,
+        content: content
+    });
+
+    persistChats();
+    renderChatHistory();
+}
+
+/* =====================================================
+   BASIC MARKDOWN FORMATTING
+===================================================== */
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function formatMarkdown(value) {
+    let text = escapeHtml(value);
+
+    text = text.replace(
+        /```([\s\S]*?)```/g,
+        '<pre class="bg-gray-900 text-gray-200 p-3 rounded-lg font-mono text-sm overflow-x-auto my-2"><code>$1</code></pre>'
+    );
+
+    text = text.replace(
+        /`([^`]+)`/g,
+        '<code class="bg-gray-800 text-blue-300 px-1.5 py-0.5 rounded text-sm font-mono">$1</code>'
+    );
+
+    text = text.replace(
+        /\*\*(.*?)\*\*/g,
+        "<strong>$1</strong>"
+    );
+
+    text = text.replace(
+        /\*(.*?)\*/g,
+        "<em>$1</em>"
+    );
+
+    text = text.replace(/\n/g, "<br>");
+
+    return text;
+}
+
+/* =====================================================
+   SCROLL
+===================================================== */
+
+function scrollToBottom() {
+    const container =
+        document.getElementById("chat-container");
+
+    container.scrollTop = container.scrollHeight;
+}
+
+/* =====================================================
+   NOTIFICATION
+===================================================== */
+
+let toastTimeout;
+
+function triggerNotification(message) {
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+    toast.classList.remove("hidden");
+
+    clearTimeout(toastTimeout);
+
+    toastTimeout = setTimeout(function () {
+        toast.classList.add("hidden");
+    }, 3500);
+}
+</script>
+
+</body>
+</html>
