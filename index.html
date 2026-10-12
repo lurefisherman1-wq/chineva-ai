@@ -1,9 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en" class="h-full dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex">
     <title>Cineva AI - Intelligent Assistant</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -173,72 +173,125 @@
          class="fixed inset-0 bg-black/60 z-20 hidden"></div>
 
     <!-- Sidebar -->
-    <aside id="sidebar"
-           class="fixed md:static inset-y-0 left-0 z-30 w-72 shrink-0
-                  bg-gemini-sidebar flex flex-col border-r border-gray-800/50
-                  transition-transform duration-300 -translate-x-full md:translate-x-0">
+    
+<!-- Sidebar -->
+<aside id="sidebar"
+       class="fixed md:static inset-y-0 left-0 z-30 w-72 shrink-0
+              bg-gemini-sidebar flex flex-col border-r border-gray-800/50
+              transition-transform duration-300 -translate-x-full md:translate-x-0">
 
-        <div class="p-3 flex flex-col h-full">
+    <div class="p-3 flex flex-col h-full">
 
-            <div class="flex items-center justify-between px-2 py-2 mb-4">
-                <button onclick="toggleSidebar()"
-                        class="p-2 rounded-full hover:bg-gemini-hover text-gray-400">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
+        <!-- Top Menu -->
+        <div class="flex items-center justify-between px-2 py-2 mb-3">
+            <button onclick="toggleSidebar()"
+                    class="p-2 rounded-full hover:bg-gemini-hover text-gray-300"
+                    title="Hide menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
 
-                <button onclick="createNewChat()"
-                        class="flex items-center gap-2 px-4 py-2 text-sm
-                               bg-gemini-hover hover:bg-gray-700 rounded-full">
-                    <i class="fa-solid fa-plus"></i>
-                    New Chat
-                </button>
-            </div>
+            <span class="text-lg font-semibold gemini-gradient-text">
+                Cineva AI
+            </span>
+        </div>
 
-            <div class="px-4 py-2 text-xs font-semibold text-gray-400 uppercase">
-                Recent
-            </div>
+        <!-- Upgrade -->
+        <button onclick="openUpgrade()"
+                class="w-full flex items-center gap-3 px-4 py-3 mb-3
+                       rounded-full bg-gemini-hover hover:bg-gray-700
+                       text-purple-300 text-sm font-medium">
+            <i class="fa-solid fa-crown w-5"></i>
+            Upgrade
+            <i class="fa-solid fa-arrow-up-right-from-square ml-auto text-xs"></i>
+        </button>
 
-            <div id="chat-history-list"
-                 class="flex-1 overflow-y-auto space-y-1"></div>
+        <!-- New Chat -->
+        <button onclick="createNewChat()"
+                class="w-full flex items-center gap-3 px-4 py-3
+                       rounded-full hover:bg-gemini-hover text-gray-200 text-sm">
+            <i class="fa-solid fa-plus w-5"></i>
+            New Chat
+        </button>
 
-            <div class="pt-3 border-t border-gray-800 space-y-1 text-sm">
+        <!-- Search Chats -->
+        <button onclick="toggleChatSearch()"
+                class="w-full flex items-center gap-3 px-4 py-3
+                       rounded-full hover:bg-gemini-hover text-gray-300 text-sm">
+            <i class="fa-solid fa-magnifying-glass w-5"></i>
+            Search Chats
+        </button>
 
-                <button onclick="testWorker()"
-                        class="w-full flex items-center gap-3 px-4 py-3
-                               rounded-full hover:bg-gemini-hover text-gray-300">
-                    <i class="fa-solid fa-server w-5"></i>
-                    Test AI Connection
-                </button>
+        <input id="chat-search"
+               type="search"
+               placeholder="Search your chats..."
+               oninput="renderChatHistory()"
+               class="hidden w-full my-2 px-3 py-2 rounded-xl
+                      bg-gemini-bg border border-gray-700
+                      text-white text-sm outline-none">
 
-                <button onclick="clearHistory()"
-                        class="w-full flex items-center gap-3 px-4 py-3
-                               rounded-full hover:bg-gemini-hover text-gray-300">
-                    <i class="fa-solid fa-trash-can w-5"></i>
-                    Clear History
-                </button>
+        <!-- Create Images -->
+        <button onclick="createImages()"
+                class="w-full flex items-center gap-3 px-4 py-3
+                       rounded-full hover:bg-gemini-hover text-gray-300 text-sm">
+            <i class="fa-regular fa-image w-5"></i>
+            Create Images
+        </button>
 
-                <div class="px-4 py-2 text-xs text-gray-500 flex justify-between">
-                    <span>Cineva AI v1.0</span>
-                    <span id="status-dot"
-                          class="w-2 h-2 rounded-full bg-gray-500"></span>
-                </div>
+        <!-- Library -->
+        <button onclick="openLibrary()"
+                class="w-full flex items-center gap-3 px-4 py-3
+                       rounded-full hover:bg-gemini-hover text-gray-300 text-sm">
+            <i class="fa-solid fa-photo-film w-5"></i>
+            Library
+        </button>
+
+        <div class="px-4 py-3 mt-4 text-xs font-semibold text-gray-500">
+            RECENT CHATS
+        </div>
+
+        <div id="chat-history-list"
+             class="flex-1 overflow-y-auto space-y-1"></div>
+
+        <!-- Bottom Menu -->
+        <div class="pt-3 border-t border-gray-800 space-y-1 text-sm">
+
+            <button onclick="testWorker()"
+                    class="w-full flex items-center gap-3 px-4 py-3
+                           rounded-full hover:bg-gemini-hover text-gray-300">
+                <i class="fa-solid fa-server w-5"></i>
+                Test AI Connection
+            </button>
+
+            <button onclick="clearHistory()"
+                    class="w-full flex items-center gap-3 px-4 py-3
+                           rounded-full hover:bg-gemini-hover text-gray-300">
+                <i class="fa-solid fa-trash-can w-5"></i>
+                Clear History
+            </button>
+
+            <div class="px-4 py-2 text-xs text-gray-500 flex justify-between">
+                <span>Cineva AI v1.0</span>
+                <span id="status-dot"
+                      class="w-2 h-2 rounded-full bg-gray-500"></span>
             </div>
         </div>
-    </aside>
+    </div>
+</aside>
+
 
     <!-- Main -->
     <main class="flex-1 flex flex-col h-full bg-gemini-bg min-w-0">
 
         <!-- Header -->
-        <header class="h-16 shrink-0 flex items-center justify-between
-                       px-4 md:px-6 border-b border-gray-800/40">
+<header class="h-16 shrink-0 flex items-center justify-between
+               px-4 md:px-6 border-b border-gray-800/40">
 
-            <div class="flex items-center gap-3">
-                <button onclick="toggleSidebar()"
-                        class="md:hidden p-2 rounded-full hover:bg-gemini-hover">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-
+    <div class="flex items-center gap-3">
+        <button onclick="toggleSidebar()"
+                class="p-2 rounded-full hover:bg-gemini-hover text-gray-300"
+                title="Toggle menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
                 <button onclick="createNewChat()"
                         class="text-xl font-semibold gemini-gradient-text">
                     Cineva AI
@@ -276,6 +329,8 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4
                             gap-3 w-full">
+
+                   
                 </div>
             </div>
 
@@ -320,7 +375,8 @@
                                    id="file-input"
                                    accept="image/*,.pdf,.txt,.doc,.docx"
                                    hidden
-                                   onchange="handleFileSelect(this)">
+                                   onchange="handleFileSelect
+(this)">
 
                             <button type="button"
                                     onclick="startVoiceInput()"
@@ -349,6 +405,70 @@
         </div>
     </main>
 </div>
+
+<!-- Library Modal -->
+<div id="library-modal"
+     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 p-4"
+     onclick="if(event.target===this) closeModal('library-modal')">
+
+    <div class="bg-gemini-sidebar border border-gray-700 rounded-2xl
+                p-5 w-full max-w-lg">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold">Your Library</h2>
+            <button onclick="closeModal('library-modal')"
+                    class="p-2 rounded-full hover:bg-gemini-hover">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <p class="text-sm text-gray-400 mb-4">
+            Your saved conversations are available in Recent Chats.
+            Image and video file saving can be added next.
+        </p>
+
+        <button onclick="closeModal('library-modal'); createNewChat()"
+                class="px-4 py-2 rounded-full bg-gemini-hover hover:bg-gray-700">
+            <i class="fa-solid fa-plus mr-2"></i>Start New Chat
+        </button>
+    </div>
+</div>
+
+<!-- Upgrade Modal -->
+<div id="upgrade-modal"
+     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 p-4"
+     onclick="if(event.target===this) closeModal('upgrade-modal')">
+
+    <div class="bg-gemini-sidebar border border-gray-700 rounded-2xl
+                p-6 w-full max-w-md">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-purple-300">
+                <i class="fa-solid fa-crown mr-2"></i>Upgrade Cineva AI
+            </h2>
+            <button onclick="closeModal('upgrade-modal')"
+                    class="p-2 rounded-full hover:bg-gemini-hover">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <p class="text-gray-300 mb-4">
+            Explore future Cineva AI plans for additional features
+            and higher usage limits.
+        </p>
+
+        <div class="bg-gemini-bg rounded-xl p-4 mb-4">
+            <p class="font-medium">Cineva AI</p>
+            <p class="text-sm text-gray-400 mt-1">
+                Paid plans and payment are not configured yet.
+            </p>
+        </div>
+
+        <button onclick="closeModal('upgrade-modal')"
+                class="w-full py-3 rounded-full bg-purple-600 hover:bg-purple-500 text-white">
+            Got it
+        </button>
+    </div>
+</div>
+
 
 <!-- Notification -->
 <div id="toast"
@@ -424,6 +544,54 @@ function closeMobileSidebar() {
     }
 }
 
+/* SIDEBAR MENU ACTIONS */
+
+function toggleChatSearch() {
+    const search = document.getElementById("chat-search");
+    search.classList.toggle("hidden");
+
+    if (!search.classList.contains("hidden")) {
+        search.focus();
+    } else {
+        search.value = "";
+        renderChatHistory();
+    }
+
+    closeMobileSidebar();
+}
+
+function createImages() {
+    createNewChat();
+
+    const input = document.getElementById("user-input");
+    input.value = "Create an image of ";
+    autoResize(input);
+    input.focus();
+
+    closeMobileSidebar();
+}
+
+function openLibrary() {
+    const modal = document.getElementById("library-modal");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    closeMobileSidebar();
+}
+
+function openUpgrade() {
+    const modal = document.getElementById("upgrade-modal");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+    closeMobileSidebar();
+}
+
+function closeModal(id) {
+    const modal = document.getElementById(id);
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+
+}
+
 /* =====================================================
    INPUT
 ===================================================== */
@@ -446,26 +614,47 @@ function handleKeyDown(event) {
     }
 }
 
+let selectedEditImage = null;
+
 function handleFileSelect(input) {
     const file = input.files && input.files[0];
 
     if (!file) return;
 
-    const textarea = document.getElementById("user-input");
+    if (!file.type.startsWith("image/")) {
+        alert("Please select an image.");
+        input.value = "";
+        return;
+    }
 
-    textarea.value +=
-        (textarea.value ? "\n" : "") +
-        "[Attached file: " + file.name + "]";
+    if (file.size > 5 * 1024 * 1024) {
+        alert("Photo 5 MB se chhoti honi chahiye.");
+        input.value = "";
+        return;
+    }
 
-    autoResize(textarea);
-    textarea.focus();
+    const reader = new FileReader();
 
-    triggerNotification(
-        "Selected: " + file.name +
-        ". Note: this version sends the filename, not the file contents."
-    );
+    reader.onload = function () {
+        selectedEditImage = reader.result;
 
-    input.value = "";
+        const textarea = document.getElementById("user-input");
+        textarea.placeholder = "Describe how to edit your photo...";
+        textarea.focus();
+
+        triggerNotification(
+            "Photo attached! Ab batayein kya change karna hai."
+        );
+
+        input.value = "";
+    };
+
+    reader.onerror = function () {
+        alert("Photo read nahi ho payi.");
+        input.value = "";
+    };
+
+    reader.readAsDataURL(file);
 }
 
 function startVoiceInput() {
@@ -607,7 +796,18 @@ function renderChatHistory() {
 
     historyList.innerHTML = "";
 
-    chats.forEach(function (chat) {
+    const searchInput = document.getElementById("chat-search");
+const searchTerm = searchInput
+    ? searchInput.value.trim().toLowerCase()
+    : "";
+
+chats
+    .filter(function (chat) {
+        return (chat.title || "New Chat")
+            .toLowerCase()
+            .includes(searchTerm);
+    })
+    .forEach(function (chat) {
         const row = document.createElement("div");
 
         row.className =
@@ -806,6 +1006,71 @@ async function fetchWorkerChat(prompt, aiElement) {
         aiElement.querySelector(".response-content");
 
     try {
+        // Edit uploaded photo
+        if (selectedEditImage) {
+            contentBox.textContent = "Editing your photo...";
+
+            const response = await fetch(
+                WORKER_URL.replace(/\/$/, "") + "/edit-image",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        image_b64: selectedEditImage
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errorMessage = errorText;
+
+                try {
+                    const errorData = JSON.parse(errorText);
+                    errorMessage = errorData.error || errorText;
+                } catch (e) {}
+
+                throw new Error(errorMessage);
+            }
+
+            const blob = await response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+
+            contentBox.classList.remove("typing-cursor");
+            contentBox.textContent = "";
+
+            const editedImage = document.createElement("img");
+            editedImage.src = imageUrl;
+            editedImage.alt = "Edited photo";
+            editedImage.style.display = "block";
+            editedImage.style.maxWidth = "100%";
+            editedImage.style.height = "auto";
+            editedImage.style.borderRadius = "12px";
+
+            contentBox.appendChild(editedImage);
+
+            const downloadLink = document.createElement("a");
+            downloadLink.href = imageUrl;
+            downloadLink.download = "cineva-ai-edited-photo.png";
+            downloadLink.textContent = "⬇ Download Edited Photo";
+            downloadLink.style.display = "inline-block";
+            downloadLink.style.marginTop = "12px";
+            downloadLink.style.padding = "10px 16px";
+            downloadLink.style.background = "#303134";
+            downloadLink.style.color = "#ffffff";
+            downloadLink.style.borderRadius = "10px";
+            downloadLink.style.textDecoration = "none";
+
+            contentBox.appendChild(downloadLink);
+
+            selectedEditImage = null;
+            saveMessageToState("model", "[Edited photo] " + prompt);
+            scrollToBottom();
+            return;
+        }
         // Detect image-generation requests
         const imageRequest = /^(generate|create|make|draw|design|imagine|generate an image|create an image|make an image|draw an image|photo of|image of|picture of|ek image|image banao|photo banao|tasveer banao|चित्र बनाओ|फोटो बनाओ)\b/i.test(prompt.trim())
             || /\b(generate|create|make|draw)\b.{0,30}\b(image|picture|photo|artwork|wallpaper|illustration)\b/i.test(prompt)
@@ -855,6 +1120,22 @@ async function fetchWorkerChat(prompt, aiElement) {
             image.style.marginTop = "10px";
 
             contentBox.appendChild(image);
+
+const downloadLink = document.createElement("a");
+downloadLink.href = image.src;
+downloadLink.download = "cineva-ai-image.png";
+downloadLink.textContent = "⬇ Download Image";
+downloadLink.style.display = "inline-block";
+downloadLink.style.marginTop = "12px";
+downloadLink.style.padding = "10px 16px";
+downloadLink.style.background = "#303134";
+downloadLink.style.color = "#ffffff";
+downloadLink.style.borderRadius = "10px";
+downloadLink.style.textDecoration = "none";
+downloadLink.style.cursor = "pointer";
+
+contentBox.appendChild(downloadLink);
+
 
             saveMessageToState("model", "[Generated image] " + prompt);
             scrollToBottom();
