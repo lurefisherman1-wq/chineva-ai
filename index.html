@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" class="h-full dark">
 <head>
@@ -182,44 +181,62 @@
 
     <div class="p-3 flex flex-col h-full">
 
-        <!-- Top Menu -->
-        <div class="flex items-center justify-between px-2 py-2 mb-3">
-            <button onclick="toggleSidebar()"
-                    class="p-2 rounded-full hover:bg-gemini-hover text-gray-300"
-                    title="Hide menu">
-                <i class="fa-solid fa-bars"></i>
-            </button>
+       <!-- Top Menu -->
+<div class="flex items-center justify-between px-2 py-3 mb-4">
 
-            <span class="text-lg font-semibold gemini-gradient-text">
-                Cineva AI
-            </span>
-        </div>
+    <button onclick="toggleSidebar()"
+            class="w-10 h-10 flex items-center justify-center
+                   rounded-full hover:bg-gemini-hover
+                   text-gray-300 transition"
+            title="Hide menu">
+        <i class="fa-solid fa-bars text-lg"></i>
+    </button>
 
-        <!-- Upgrade -->
-        <button onclick="openUpgrade()"
-                class="w-full flex items-center gap-3 px-4 py-3 mb-3
-                       rounded-full bg-gemini-hover hover:bg-gray-700
-                       text-purple-300 text-sm font-medium">
-            <i class="fa-solid fa-crown w-5"></i>
-            Upgrade
-            <i class="fa-solid fa-arrow-up-right-from-square ml-auto text-xs"></i>
-        </button>
+    <span class="text-xl font-semibold gemini-gradient-text">
+        Cineva AI
+    </span>
 
-        <!-- New Chat -->
-        <button onclick="createNewChat()"
-                class="w-full flex items-center gap-3 px-4 py-3
-                       rounded-full hover:bg-gemini-hover text-gray-200 text-sm">
-            <i class="fa-solid fa-plus w-5"></i>
-            New Chat
-        </button>
+</div>
+<!-- Upgrade -->
+<button onclick="openUpgrade()"
+        class="w-full flex items-center gap-3 px-4 py-3 mb-3
+               rounded-full bg-gradient-to-r
+               from-purple-900/50 to-blue-900/50
+               border border-purple-500/30
+               hover:border-purple-400/60
+               hover:from-purple-800/60 hover:to-blue-800/60
+               text-purple-200 text-sm font-medium
+               transition duration-200">
 
-        <!-- Search Chats -->
-        <button onclick="toggleChatSearch()"
-                class="w-full flex items-center gap-3 px-4 py-3
-                       rounded-full hover:bg-gemini-hover text-gray-300 text-sm">
-            <i class="fa-solid fa-magnifying-glass w-5"></i>
-            Search Chats
-        </button>
+    <i class="fa-solid fa-crown w-5 text-center text-yellow-300"></i>
+
+    <span>Upgrade Plan</span>
+
+    <i class="fa-solid fa-arrow-up-right-from-square ml-auto text-xs"></i>
+</button>
+
+       <!-- New Chat -->
+<button onclick="createNewChat()"
+        class="w-full flex items-center gap-3 px-4 py-3
+               rounded-full bg-[#303134] hover:bg-[#3c4043]
+               text-gray-100 text-sm font-medium
+               transition duration-200">
+
+    <i class="fa-solid fa-plus w-5 text-center"></i>
+
+    <span>New Chat</span>
+</button>
+<!-- Search Chats -->
+<button onclick="toggleChatSearch()"
+        class="w-full flex items-center gap-3 px-4 py-3
+               rounded-full hover:bg-[#303134]
+               text-gray-300 hover:text-white text-sm
+               transition duration-200">
+
+    <i class="fa-solid fa-magnifying-glass w-5 text-center"></i>
+
+    <span>Search Chats</span>
+</button>
 
         <input id="chat-search"
                type="search"
@@ -229,31 +246,50 @@
                       bg-gemini-bg border border-gray-700
                       text-white text-sm outline-none">
 
-        <!-- Create Images -->
-        <button onclick="createImages()"
-                class="w-full flex items-center gap-3 px-4 py-3
-                       rounded-full hover:bg-gemini-hover text-gray-300 text-sm">
-            <i class="fa-regular fa-image w-5"></i>
-            Create Images
-        </button>
+      <!-- Create Images -->
+<button onclick="createImages()"
+        class="w-full flex items-center gap-3 px-4 py-3
+               rounded-full hover:bg-[#303134]
+               text-gray-300 hover:text-white text-sm
+               transition duration-200">
+
+    <i class="fa-regular fa-image w-5 text-center text-purple-300"></i>
+
+    <span>Create Images</span>
+</button>
 
         <!-- Library -->
-        <button onclick="openLibrary()"
-                class="w-full flex items-center gap-3 px-4 py-3
-                       rounded-full hover:bg-gemini-hover text-gray-300 text-sm">
-            <i class="fa-solid fa-photo-film w-5"></i>
-            Library
-        </button>
+<button onclick="openLibrary()"
+        class="w-full flex items-center gap-3 px-4 py-3
+               rounded-full hover:bg-[#303134]
+               text-gray-300 hover:text-white text-sm
+               transition duration-200">
 
-        <div class="px-4 py-3 mt-4 text-xs font-semibold text-gray-500">
-            RECENT CHATS
-        </div>
+    <i class="fa-solid fa-photo-film w-5 text-center text-blue-300"></i>
+
+    <span>Library</span>
+</button>
+
+      <!-- Recent Chats Heading -->
+<div class="px-4 pt-5 pb-3 mt-2
+            text-xs font-semibold text-gray-400
+            tracking-wider">
+    RECENT CHATS
+</div>
 
         <div id="chat-history-list"
              class="flex-1 overflow-y-auto space-y-1"></div>
 
         <!-- Bottom Menu -->
-        <div class="pt-3 border-t border-gray-800 space-y-1 text-sm">
+<!-- Login Button -->
+<button
+    onclick="openLoginModal()"
+    class="w-full flex items-center gap-3 px-4 py-3 rounded-full hover:bg-[#303134] text-gray-300 hover:text-white text-sm transition duration-200">
+    <i class="fa-solid fa-user w-5 text-center text-blue-300"></i>
+    <span id="login-button-text">Login / Sign Up</span>
+</button>
+        <div class="pt-4 mt-2 border-t border-gray-700/50
+            space-y-1 text-sm">
 
             <button onclick="testWorker()"
                     class="w-full flex items-center gap-3 px-4 py-3
@@ -312,29 +348,73 @@
         <div id="chat-container"
              class="flex-1 overflow-y-auto p-4 md:p-6">
 
-            <!-- Welcome screen -->
-            <div id="welcome-screen"
-                 class="min-h-full max-w-4xl mx-auto flex flex-col
-                        justify-center items-start gap-8 py-10">
+            <!-- Welcome screen --><!-- Gemini-style Welcome Screen -->
+<div id="welcome-screen"
+     class="min-h-full max-w-4xl mx-auto flex flex-col
+            justify-center items-start gap-8 py-10 px-2">
 
-                <div>
-                    <h1 class="text-4xl md:text-5xl font-medium mb-3">
-                        <span class="gemini-gradient-text">Hello, Friend</span>
-                    </h1>
+    <div>
+        <h1 class="text-4xl md:text-5xl font-medium mb-3">
+            <span class="gemini-gradient-text">
+                Hello, Friend
+            </span>
+        </h1>
 
-                    <h2 class="text-2xl md:text-4xl text-gray-500">
-                        How can Cineva AI assist you today?
-                    </h2>
-                </div>
+        <h2 class="text-2xl md:text-4xl text-gray-500">
+            How can I help you today?
+        </h2>
+    </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4
-                            gap-3 w-full">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
 
-                   
-                </div>
-            </div>
+        <button type="button"
+                onclick="sendQuickPrompt('Explain artificial intelligence in simple words')"
+                class="text-left bg-gemini-card hover:bg-gemini-hover
+                       border border-gray-700/50 rounded-2xl p-5
+                       min-h-28 transition">
+            <i class="fa-solid fa-lightbulb text-blue-400 text-lg mb-4"></i>
+            <p class="text-sm text-gray-200">
+                Explain something new
+            </p>
+        </button>
 
-            <!-- Messages -->
+        <button type="button"
+                onclick="sendQuickPrompt('Help me write a professional email')"
+                class="text-left bg-gemini-card hover:bg-gemini-hover
+                       border border-gray-700/50 rounded-2xl p-5
+                       min-h-28 transition">
+            <i class="fa-solid fa-pen text-purple-400 text-lg mb-4"></i>
+            <p class="text-sm text-gray-200">
+                Write something
+            </p>
+        </button>
+
+        <button type="button"
+                onclick="sendQuickPrompt('Create an image of a beautiful landscape at sunset')"
+                class="text-left bg-gemini-card hover:bg-gemini-hover
+                       border border-gray-700/50 rounded-2xl p-5
+                       min-h-28 transition">
+            <i class="fa-regular fa-image text-pink-400 text-lg mb-4"></i>
+            <p class="text-sm text-gray-200">
+                Create an image
+            </p>
+        </button>
+
+        <button type="button"
+                onclick="sendQuickPrompt('Give me a useful coding example for beginners')"
+                class="text-left bg-gemini-card hover:bg-gemini-hover
+                       border border-gray-700/50 rounded-2xl p-5
+                       min-h-28 transition">
+            <i class="fa-solid fa-code text-emerald-400 text-lg mb-4"></i>
+            <p class="text-sm text-gray-200">
+                Help me with coding
+            </p>
+        </button>
+
+    </div>
+</div>
+
+                    <!-- Messages -->
             <div id="messages-list"
                  class="hidden max-w-4xl mx-auto space-y-6 pb-6"></div>
         </div>
@@ -345,6 +425,30 @@
 
                 <div class="relative bg-gemini-input rounded-3xl
                             border border-gray-700/60 gemini-border-glow">
+<!-- Attached Image Preview -->
+<div id="attached-image-preview"
+     class="hidden px-4 pt-4">
+
+    <div class="relative inline-block">
+        <img id="attached-image-thumb"
+             src=""
+             alt="Attached photo preview"
+             class="w-24 h-24 object-cover rounded-xl border border-gray-600">
+
+        <button type="button"
+                onclick="removeAttachedImage()"
+                title="Remove photo"
+                class="absolute -top-2 -right-2 w-7 h-7 rounded-full
+                       bg-gray-700 hover:bg-red-600 text-white
+                       flex items-center justify-center shadow">
+            <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+    </div>
+
+    <p class="text-xs text-gray-400 mt-2">
+        Photo attached · Describe your edit below
+    </p>
+</div>
 
                     <textarea
                         id="user-input"
@@ -375,8 +479,7 @@
                                    id="file-input"
                                    accept="image/*,.pdf,.txt,.doc,.docx"
                                    hidden
-                                   onchange="handleFileSelect
-(this)">
+                                   onchange="handleFileSelect(this)">
 
                             <button type="button"
                                     onclick="startVoiceInput()"
@@ -603,6 +706,7 @@ function autoResize(textarea) {
         Math.min(textarea.scrollHeight, 192) + "px";
 }
 
+
 function handleKeyDown(event) {
     if (
         event.key === "Enter" &&
@@ -614,7 +718,7 @@ function handleKeyDown(event) {
     }
 }
 
-let selectedEditImage = null;
+window.selectedEditImage = null;
 
 function handleFileSelect(input) {
     const file = input.files && input.files[0];
@@ -622,13 +726,14 @@ function handleFileSelect(input) {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-        alert("Please select an image.");
+        triggerNotification("Please select an image.");
         input.value = "";
+
         return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-        alert("Photo 5 MB se chhoti honi chahiye.");
+        triggerNotification("Photo 5 MB se chhoti honi chahiye.");
         input.value = "";
         return;
     }
@@ -636,25 +741,109 @@ function handleFileSelect(input) {
     const reader = new FileReader();
 
     reader.onload = function () {
-        selectedEditImage = reader.result;
+    const sourceImage = new Image();
+
+    sourceImage.onload = function () {
+        const canvas = document.createElement("canvas");
+        const scale = Math.min(
+            1,
+            512 / sourceImage.width,
+            512 / sourceImage.height
+        );
+
+        canvas.width = Math.max(
+            1,
+            Math.round(sourceImage.width * scale)
+        );
+
+        canvas.height = Math.max(
+            1,
+            Math.round(sourceImage.height * scale)
+        );
+
+        const context = canvas.getContext("2d");
+        context.drawImage(
+            sourceImage,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        window.selectedEditImage =
+            canvas.toDataURL("image/jpeg", 0.9);
+
+        const preview =
+            document.getElementById("attached-image-preview");
+
+        const thumbnail =
+            document.getElementById("attached-image-thumb");
+
+        if (!preview || !thumbnail) {
+            triggerNotification("Photo preview HTML nahi mila.");
+            return;
+        }
+
+        thumbnail.src = window.selectedEditImage;
+        preview.classList.remove("hidden");
+
+        const textarea = document.getElementById("user-input");
+
+        if (textarea) {
+            textarea.placeholder =
+                "Describe how to edit your photo...";
+            textarea.focus();
+        }
+    };
+
+    sourceImage.onerror = function () {
+        triggerNotification("Photo load nahi ho payi.");
+    };
+
+    sourceImage.src = reader.result;
+};
+        const preview = document.getElementById("attached-image-preview");
+        const thumbnail = document.getElementById("attached-image-thumb");
+
+        if (!preview || !thumbnail) {
+            triggerNotification("Photo preview HTML nahi mila.");
+            return;
+        }
+
+        thumbnail.src = selectedEditImage;
+        preview.classList.remove("hidden");
 
         const textarea = document.getElementById("user-input");
         textarea.placeholder = "Describe how to edit your photo...";
         textarea.focus();
 
-        triggerNotification(
-            "Photo attached! Ab batayein kya change karna hai."
-        );
+        triggerNotification("Photo attached! Ab neeche editing prompt likhein.");
 
         input.value = "";
     };
 
     reader.onerror = function () {
-        alert("Photo read nahi ho payi.");
+        triggerNotification("Photo read nahi ho payi.");
         input.value = "";
     };
 
     reader.readAsDataURL(file);
+}
+
+function removeAttachedImage() {
+    selectedEditImage = null;
+
+    document.getElementById("attached-image-thumb").src = "";
+
+    document.getElementById(
+        "attached-image-preview"
+    ).classList.add("hidden");
+
+    document.getElementById("file-input").value = "";
+
+    const textarea = document.getElementById("user-input");
+    textarea.placeholder = "Ask Cineva AI...";
+    textarea.focus();
 }
 
 function startVoiceInput() {
@@ -778,9 +967,13 @@ function createNewChat() {
     messagesList.innerHTML = "";
 
     const input = document.getElementById("user-input");
+
     input.value = "";
     input.style.height = "auto";
+    input.placeholder = "Ask Cineva AI...";
 
+    // Clear previously attached photo
+	removeAttachedImage();
     closeMobileSidebar();
     renderChatHistory();
     input.focus();
@@ -877,7 +1070,11 @@ function loadChat(chatId) {
     messagesList.innerHTML = "";
 
     chat.messages.forEach(function (message) {
-        appendMessageToUI(message.role, message.content);
+        appendMessageToUI(
+    message.role,
+    message.content,
+    message.imageData || null
+);
     });
 
     renderChatHistory();
@@ -945,13 +1142,15 @@ function sendQuickPrompt(prompt) {
    SEND MESSAGE
 ===================================================== */
 
+
 async function sendMessage() {
     const input = document.getElementById("user-input");
     const sendButton = document.getElementById("send-btn");
 
     const prompt = input.value.trim();
+    const attachedImage = window.selectedEditImage || null;
 
-    if (!prompt || isGenerating) return;
+    if ((!prompt && !attachedImage) || isGenerating) return;
 
     isGenerating = true;
     sendButton.disabled = true;
@@ -959,28 +1158,32 @@ async function sendMessage() {
     input.value = "";
     input.style.height = "auto";
 
+    removeAttachedImage();
+
     document.getElementById("welcome-screen")
         .classList.add("hidden");
 
-    const messagesList =
-        document.getElementById("messages-list");
-
+    const messagesList = document.getElementById("messages-list");
     messagesList.classList.remove("hidden");
 
     if (!activeChatId) {
         activeChatId = Date.now().toString();
 
+        const chatTitle = prompt || "Image message";
+
         chats.unshift({
             id: activeChatId,
-            title: prompt.length > 35
-                ? prompt.substring(0, 35) + "..."
-                : prompt,
+            title: chatTitle.length > 35
+                ? chatTitle.substring(0, 35) + "..."
+                : chatTitle,
             messages: []
         });
     }
 
-    appendMessageToUI("user", prompt);
-    saveMessageToState("user", prompt);
+    const userPrompt = prompt || "Please describe this image.";
+
+    appendMessageToUI("user", userPrompt, attachedImage);
+    saveMessageToState("user", userPrompt, attachedImage);
 
     const aiElement = createAiMessageElement();
     messagesList.appendChild(aiElement);
@@ -988,7 +1191,26 @@ async function sendMessage() {
     scrollToBottom();
 
     try {
-        await fetchWorkerChat(prompt, aiElement);
+        const editRequest =
+            /\b(edit|change|replace|remove|erase|background|retouch|enhance|modify|redesign|make it|add to the photo|color|colour|blue|red|green|black|white)\b|बदलो|हटाओ|बदल दो|सुधारो|बैकग्राउंड|रंग/i.test(userPrompt);
+
+        if (attachedImage && editRequest) {
+            await editImageInChat(
+                userPrompt,
+                attachedImage,
+                aiElement
+            );
+        } else {
+            await fetchWorkerChat(
+                userPrompt,
+                aiElement,
+                attachedImage
+            );
+        }
+    } catch (error) {
+        aiElement.classList.remove("typing-cursor");
+        aiElement.textContent =
+            "Cineva AI error: " + error.message;
     } finally {
         isGenerating = false;
         sendButton.disabled = false;
@@ -1001,13 +1223,16 @@ async function sendMessage() {
 ===================================================== */
 
 
-async function fetchWorkerChat(prompt, aiElement) {
+async function fetchWorkerChat(prompt, aiElement, imageData = null) {
     const contentBox =
         aiElement.querySelector(".response-content");
 
     try {
         // Edit uploaded photo
-        if (selectedEditImage) {
+        if (
+    imageData &&
+    /\b(edit|change|replace|remove|add|retouch|background|enhance)\b|बदलो|हटाओ|जोड़ो|एडिट/i.test(prompt)
+) {
             contentBox.textContent = "Editing your photo...";
 
             const response = await fetch(
@@ -1067,6 +1292,8 @@ async function fetchWorkerChat(prompt, aiElement) {
             contentBox.appendChild(downloadLink);
 
             selectedEditImage = null;
+document.getElementById("user-input").placeholder =
+    "Ask Cineva AI...";
             saveMessageToState("model", "[Edited photo] " + prompt);
             scrollToBottom();
             return;
@@ -1166,9 +1393,10 @@ contentBox.appendChild(downloadLink);
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                message: prompt,
-                history: history
-            })
+    message: prompt,
+    history: history,
+    imageData: imageData
+})
         });
 
         const rawResponse = await response.text();
@@ -1217,9 +1445,9 @@ contentBox.appendChild(downloadLink);
    MESSAGE DISPLAY
 ===================================================== */
 
-function appendMessageToUI(role, content) {
-    const messagesList =
-        document.getElementById("messages-list");
+
+function appendMessageToUI(role, content, imageData = null) {
+    const messagesList = document.getElementById("messages-list");
 
     if (role === "user") {
         const row = document.createElement("div");
@@ -1229,8 +1457,19 @@ function appendMessageToUI(role, content) {
         bubble.className =
             "bg-gemini-card border border-gray-700/50 text-gray-100 " +
             "max-w-2xl px-5 py-3 rounded-2xl text-base shadow-sm";
-        bubble.style.whiteSpace = "pre-wrap";
-        bubble.textContent = content;
+
+        if (imageData) {
+            const img = document.createElement("img");
+            img.src = imageData;
+            img.alt = "Attached photo";
+            img.className = "max-w-full w-64 rounded-xl mb-3";
+            bubble.appendChild(img);
+        }
+
+        const text = document.createElement("div");
+        text.style.whiteSpace = "pre-wrap";
+        text.textContent = content;
+        bubble.appendChild(text);
 
         row.appendChild(bubble);
         messagesList.appendChild(row);
@@ -1245,8 +1484,27 @@ function appendMessageToUI(role, content) {
 
     messagesList.appendChild(aiElement);
 }
+function saveMessageToState(role, content, imageData = null) {
+    const chat = chats.find(function (item) {
+        return item.id === activeChatId;
+    });
 
+    if (!chat) return;
 
+    const message = {
+        role: role,
+        content: content
+    };
+
+    if (imageData) {
+        message.imageData = imageData;
+    }
+
+    chat.messages.push(message);
+
+    persistChats();
+    renderChatHistory();
+}
 
 function createAiMessageElement() {
     const element = document.createElement("div");
@@ -1267,23 +1525,6 @@ function createAiMessageElement() {
     return element;
 }
 
-
-
-function saveMessageToState(role, content) {
-    const chat = chats.find(function (item) {
-        return item.id === activeChatId;
-    });
-
-    if (!chat) return;
-
-    chat.messages.push({
-        role: role,
-        content: content
-    });
-
-    persistChats();
-    renderChatHistory();
-}
 
 /* =====================================================
    BASIC MARKDOWN FORMATTING
@@ -1355,6 +1596,186 @@ function triggerNotification(message) {
         toast.classList.add("hidden");
     }, 3500);
 }
+</script>
+
+<!-- Cineva AI Login Modal -->
+<div id="login-modal"
+     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+
+    <div class="w-full max-w-md rounded-2xl border border-gray-700 bg-[#1e1f20] p-6 text-white">
+
+        <div class="mb-5 flex items-center justify-between">
+            <h2 class="text-xl font-semibold">Welcome to Cineva AI</h2>
+            <button type="button"
+                    onclick="closeLoginModal()"
+                    class="rounded-full px-3 py-1 text-gray-300 hover:bg-[#303134]">
+                ✕
+            </button>
+        </div>
+
+        <p class="mb-5 text-sm text-gray-400">
+            Sign in to your Cineva AI account
+        </p>
+
+        <button type="button"
+                onclick="loginWithGoogle()"
+                class="mb-4 w-full rounded-full border border-gray-600 px-4 py-3 hover:bg-[#303134]">
+            <i class="fa-brands fa-google mr-2"></i>
+            Continue with Google
+        </button>
+
+        <div class="mb-4 text-center text-sm text-gray-500">OR</div>
+
+        <input id="login-email"
+               type="email"
+               placeholder="Email address"
+               autocomplete="email"
+               class="mb-3 w-full rounded-xl border border-gray-600 bg-[#131314] px-4 py-3 text-white outline-none">
+
+        <input id="login-password"
+               type="password"
+               placeholder="Password"
+               autocomplete="current-password"
+               class="mb-4 w-full rounded-xl border border-gray-600 bg-[#131314] px-4 py-3 text-white outline-none">
+
+        <button type="button"
+                onclick="loginWithEmail()"
+                class="w-full rounded-full bg-blue-600 px-4 py-3 font-medium hover:bg-blue-500">
+            Log In
+        </button>
+
+        <button type="button"
+                onclick="registerWithEmail()"
+                class="mt-3 w-full rounded-full px-4 py-3 text-blue-300 hover:bg-[#303134]">
+            Create New Account
+        </button>
+
+        <p id="login-message"
+           role="status"
+           class="mt-4 text-center text-sm text-gray-300"></p>
+
+    </div>
+</div>
+
+<!-- Cineva AI Firebase Authentication -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+// Apne Firebase Console ki actual apiKey yahan paste karo
+const firebaseConfig = {
+    apiKey: "AIzaSyD9kqt3WkHtk4SFm-QhNOK0Fipbo8xyo_Y",
+    authDomain: "chineva-ai.firebaseapp.com",
+    projectId: "chineva-ai",
+    storageBucket: "chineva-ai.firebasestorage.app",
+    messagingSenderId: "246469731093",
+    appId: "1:246469731093:web:d7ed178ca216bc13123f1c"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+
+function showLoginMessage(message) {
+    document.getElementById("login-message").textContent = message;
+}
+
+window.openLoginModal = function () {
+    document.getElementById("login-modal").classList.remove("hidden");
+    showLoginMessage("");
+};
+
+window.closeLoginModal = function () {
+    document.getElementById("login-modal").classList.add("hidden");
+};
+
+window.loginWithGoogle = async function () {
+    showLoginMessage("Connecting to Google...");
+    try {
+        await signInWithPopup(auth, googleProvider);
+        window.closeLoginModal();
+        showLoginMessage("");
+    } catch (error) {
+        showLoginMessage(error.message);
+    }
+};
+
+window.loginWithEmail = async function () {
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+
+    if (!email || !password) {
+        showLoginMessage("Please enter your email and password.");
+        return;
+    }
+
+    showLoginMessage("Signing in...");
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.closeLoginModal();
+        showLoginMessage("");
+    } catch (error) {
+        showLoginMessage(error.message);
+    }
+};
+
+window.registerWithEmail = async function () {
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+
+    if (!email || !password) {
+        showLoginMessage("Enter your email and password first.");
+        return;
+    }
+
+    if (password.length < 6) {
+        showLoginMessage("Password must contain at least 6 characters.");
+        return;
+    }
+
+    showLoginMessage("Creating your account...");
+    try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        window.closeLoginModal();
+        showLoginMessage("");
+    } catch (error) {
+        showLoginMessage(error.message);
+    }
+};
+
+window.logoutCineva = async function () {
+    try {
+        await signOut(auth);
+    } catch (error) {
+        console.error("Sign out failed:", error);
+    }
+};
+
+onAuthStateChanged(auth, function (user) {
+    const buttonText = document.getElementById("login-button-text");
+    const loginButton = buttonText?.closest("button");
+
+    if (!buttonText || !loginButton) return;
+
+    if (user) {
+        buttonText.textContent = user.email || "Google Account";
+        loginButton.onclick = window.logoutCineva;
+        loginButton.title = "Click to sign out";
+    } else {
+        buttonText.textContent = "Login / Sign Up";
+        loginButton.onclick = window.openLoginModal;
+        loginButton.title = "Sign in to Cineva AI";
+    }
+});
 </script>
 
 </body>
